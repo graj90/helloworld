@@ -1,33 +1,26 @@
 pipeline {
     agent any
 
+    tools {
+        // Define the Maven tool by name
+        maven 'maven'
+    }
+
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Compile Stage') {
             steps {
-                // Use the 'maven' tool
                 withMaven(maven: 'maven') {
                     sh 'mvn clean compile'
                 }
             }
         }
 
-        stage('Testing Stage') {
-            steps {
-                // Use the 'maven' tool
-                withMaven(maven: 'maven') {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-        stage('Deployment Stage') {
-            steps {
-                // Use the 'maven' tool
-                withMaven(maven: 'maven') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
+        // Add other stages as needed
     }
 }
-
