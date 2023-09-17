@@ -1,26 +1,27 @@
+
 pipeline {
     agent any
 
-    tools {
-        // Define the Maven tool by name
-        maven 'maven'
-    }
-
     stages {
-        stage('Checkout SCM') {
+        stage('Debug') {
             steps {
-                checkout scm
+                echo "Current workspace: ${WORKSPACE}"
+                sh "ls -al ${WORKSPACE}"
             }
         }
 
-        stage('Compile Stage') {
+        stage('Build') {
             steps {
                 withMaven(maven: 'maven') {
                     sh 'mvn clean compile'
                 }
             }
         }
+    }
 
-        // Add other stages as needed
+    post {
+        failure {
+            echo "Pipeline failed"
+        }
     }
 }
