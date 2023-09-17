@@ -1,1 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        // Define the Maven tool using the configured name
+        // Make sure this name matches the name in Jenkins tools configuration
+        maven 'apache-maven-3.9.4'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out the project code from your version control system
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanCheckout']], submoduleCfg: [], 
+                    userRemoteConfigs: [[url: 'https://github.com/graj90/helloworld.git']]])
+            }
+        }
+
+        stage('Compile Stage') {
+            steps {
+                // Use the Maven tool defined above
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Testing Stage') {
+            steps {
+                // Use the Maven tool defined above
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deployment Stage') {
+            steps {
+                // Use the Maven tool defined above
+                sh 'mvn deploy'
+            }
+        }
+    }
+}
 
