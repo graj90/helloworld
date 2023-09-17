@@ -1,27 +1,34 @@
 
+
 pipeline {
     agent any
 
     stages {
-        stage('Debug') {
-            steps {
-                echo "Current workspace: ${WORKSPACE}"
-                sh "ls -al ${WORKSPACE}"
-            }
-        }
+        stage ('Compile Stage') {
 
-        stage('Build') {
             steps {
-                withMaven(maven: 'maven') {
+                withMaven(maven : 'maven') {
                     sh 'mvn clean compile'
                 }
             }
         }
-    }
 
-    post {
-        failure {
-            echo "Pipeline failed"
+        stage ('Testing Stage') {
+
+            steps {
+                withMaven(maven : 'maven') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+
+        stage ('Deployment Stage') {
+            steps {
+                withMaven(maven : 'maven') {
+                    sh 'mvn deploy'
+                }
+            }
         }
     }
 }
